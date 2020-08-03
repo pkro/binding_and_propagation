@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <section id="game_div"></section>
+    <script src="flashcard_QA.json"></script>
+    <script src="main.js"></script>
+    <script>
+      (function () {
+        var myGame = new Game('game_div', {
+          game: 'flashcard',
+          data: flashcard_QA,
+        });
+      })();
+    </script>
+  </body>
+</html>
