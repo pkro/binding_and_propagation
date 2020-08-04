@@ -1,3 +1,5 @@
+func = new $f();
+func.hello();
 // Game
 //   Info section
 //   Deck
@@ -24,16 +26,14 @@
 // iife to avoid polution of global namespace
 (function (window) {
   // Game
-  var Game = function (el, option) {
+  const Game = function (el, option) {
     this.el = document.getElementById(el);
 
     this.option = option;
     //   Info section
-    this.info_div = document.createElement('div');
-    this.info_div.id = 'info_div';
+    this.info_div = createDiv('info_div');
 
-    this.deck_div = document.createElement('div');
-    this.deck_div.id = 'deck_div';
+    this.deck_div = createDiv('deck_div');
     this.gameDeck = new Deck(this.deck_div, option);
     this.gameDeck.buildDeck();
 
@@ -46,7 +46,7 @@
   };
 
   // Deck
-  var Deck = function (deck_div, option) {
+  const Deck = function (deck_div, option) {
     this.deckData = option.data;
     this.buildDeck = function () {
       var fragment = document.createDocumentFragment();
@@ -67,18 +67,29 @@
   };
 
   // Card
-  var Card = function (val, suit) {
-    this.val = val;
-    this.suit = suit;
-    this.buildCard = function () {};
+  const Card = function (val, suit) {
+    this.id = '';
+    this.data = '';
+    this.cardCont = createDiv('card_container');
+    this.cardFront = createDiv('card_front');
+    this.cardBack = document.createElement('div');
+    this.cardBack.className = 'card_back';
+    this.buildCard = function () {
+      const flipDiv = createDiv('flip'),
+        frontValDiv = createDiv('front_val'),
+        backValDiv = createDiv('back_val'),
+        catDiv = createDiv('cat_val');
+    };
+
     //   val
+
     //   suit
     //   ----
     //   flip
   };
 
   // Discard Pile
-  var DiscardPile = function () {
+  const DiscardPile = function () {
     //   Holders
     //   ----
     //   accept or reject
