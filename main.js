@@ -16,23 +16,12 @@
     this.deck_div.id = 'deck_div';
 
     this.gameDeck = new Deck(this.deck_div, option);
-    this.gameDeck.buildDeck();
+    this.gameDeck.buildDeck(this.deck_div);
 
     var shuffleButton = document.createElement('button');
     shuffleButton.innerHTML = 'Shuffle';
 
-    // shuffleButton.onclick = function () { // anonymous func
-    //   console.log(this); // this = shuffle button (dynamic context);
-    // };
-
-    // shuffleButton.onclick = () => { // arrow func
-    //   console.log(this); // this = Game (lexical context)
-    // };
-    function shuffle() {
-      console.log(this);
-    }
-    shuffle(); // this = undefined in strict mode or window in non-strict
-    shuffleButton.onclick = shuffle; // this = button
+    shuffleButton.onclick = this.gameDeck.shuffle.bind(this); // the shuffle's this is now "Game"
 
     this.info_div.appendChild(shuffleButton);
     // 	Discard Pile
@@ -45,7 +34,7 @@
   // Deck
   const Deck = function (deck_div, option) {
     this.deckData = option.data;
-    this.buildDeck = function () {
+    this.buildDeck = function (deck_div) {
       var parentFrag = document.createDocumentFragment();
       deck_div.innerHTML = '';
       for (var i = this.deckData.length - 1; i >= 0; i--) {
@@ -61,6 +50,26 @@
     //   ----
     //   shuffle
     //   stack
+  };
+
+  Deck.prototype.shuffle = function () {
+    var array = this.gameDeck.deckData;
+    var m = array.length,
+      t,
+      i;
+
+    // While there remain elements to shuffle…
+    while (m) {
+      // Pick a remaining element…
+      i = Math.floor(Math.random() * m--);
+
+      // And swap it with the current element.
+      t = array[m];
+      array[m] = array[i];
+      array[i] = t;
+    }
+    //this.gameDeck.deckData = array; // unnecessary as array is a reference so gameDeck already
+    this.gameDeck.buildDeck(this.deck_div);
   };
 
   // Card
