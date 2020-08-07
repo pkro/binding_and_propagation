@@ -17,6 +17,24 @@
 
     this.gameDeck = new Deck(this.deck_div, option);
     this.gameDeck.buildDeck();
+
+    var shuffleButton = document.createElement('button');
+    shuffleButton.innerHTML = 'Shuffle';
+
+    // shuffleButton.onclick = function () { // anonymous func
+    //   console.log(this); // this = shuffle button (dynamic context);
+    // };
+
+    // shuffleButton.onclick = () => { // arrow func
+    //   console.log(this); // this = Game (lexical context)
+    // };
+    function shuffle() {
+      console.log(this);
+    }
+    shuffle(); // this = undefined in strict mode or window in non-strict
+    shuffleButton.onclick = shuffle; // this = button
+
+    this.info_div.appendChild(shuffleButton);
     // 	Discard Pile
     // 	Rules
 
@@ -93,7 +111,7 @@
     //   flip
   };
 
-  // Discard Pile
+  // Discard Pile    console.log(
   const DiscardPile = function () {
     //   Holders
     //   ----
