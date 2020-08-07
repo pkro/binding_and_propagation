@@ -44,12 +44,8 @@
         card.buildCard(parentFrag);
       }
       deck_div.appendChild(parentFrag);
+      this.stack(deck_div);
     };
-
-    // Cards
-    //   ----
-    //   shuffle
-    //   stack
   };
 
   Deck.prototype.shuffle = function () {
@@ -70,6 +66,15 @@
     }
     //this.gameDeck.deckData = array; // unnecessary as array is a reference so gameDeck already
     this.gameDeck.buildDeck(this.deck_div);
+  };
+
+  Deck.prototype.stack = function (deck_div) {
+    var cards = deck_div.children;
+    for (let i = 0; i < cards.length; i++) {
+      cards[i].style.top = i + 'px';
+      cards[i].style.left = i + 'px';
+      cards[i].classList.add('stacked_card');
+    }
   };
 
   // Card
@@ -106,19 +111,23 @@
       this.cardCont.id = this.id;
       this.cardCont.appendChild(flipDiv);
 
-      this.cardCont.onclick = function (e) {
-        e.currentTarget.classList.toggle('flip_card');
-        e.currentTarget.classList.toggle('slide_over');
-      };
+      this.cardCont.onclick = cardClick;
+      //debugger;
       parentFrag.appendChild(this.cardCont);
     };
-
-    //   val
-
-    //   suit
-    //   ----
-    //   flip
   };
+
+  var cardClick = (function () {
+    var counter = 0;
+    return function (e) {
+      console.log(counter);
+      e.currentTarget.classList.toggle('flip_card');
+      e.currentTarget.classList.toggle('slide_over');
+      e.currentTarget.style.zIndex = counter;
+      counter++;
+      console.log(counter);
+    };
+  })();
 
   // Discard Pile    console.log(
   const DiscardPile = function () {
