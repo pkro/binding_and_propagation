@@ -1,9 +1,8 @@
 'use strict';
 
-// iife to avoid polution of global namespace
 (function (window) {
   // Game
-  const Game = function (el, option) {
+  var Game = function (el, option) {
     this.el = document.getElementById(el);
     this.option = option;
     // 	Info section
@@ -14,16 +13,14 @@
 
     this.deck_div = document.createElement('div');
     this.deck_div.id = 'deck_div';
+    this.gameDeck = new Deck(option);
+    this.gameDeck.buildDeck.call(this);
 
-    this.gameDeck = new Deck(this.deck_div, option);
-    this.gameDeck.buildDeck(this.deck_div);
+    var shuffleBtn = document.createElement('button');
+    shuffleBtn.innerHTML = 'Shuffle';
+    shuffleBtn.onclick = this.gameDeck.shuffle.bind(this);
 
-    var shuffleButton = document.createElement('button');
-    shuffleButton.innerHTML = 'Shuffle';
-
-    shuffleButton.onclick = this.gameDeck.shuffle.bind(this); // the shuffle's this is now "Game"
-
-    this.info_div.appendChild(shuffleButton);
+    this.info_div.appendChild(shuffleBtn);
     // 	Discard Pile
     // 	Rules
 
@@ -32,109 +29,102 @@
   };
 
   // Deck
-  const Deck = function (deck_div, option) {
+  var Deck = function (option) {
     this.deckData = option.data;
-    this.buildDeck = function (deck_div) {
+    this.buildDeck = function () {
       var parentFrag = document.createDocumentFragment();
-      deck_div.innerHTML = '';
-      for (var i = this.deckData.length - 1; i >= 0; i--) {
+      this.deck_div.innerHTML = '';
+      for (var i = this.option.data.length - 1; i >= 0; i--) {
         var card = new Card();
         card.id = 'card-' + i;
-        card.data = this.deckData[i];
+        card.data = this.option.data[i];
         card.buildCard(parentFrag);
       }
-      deck_div.appendChild(parentFrag);
-      this.stack(deck_div);
+      this.deck_div.appendChild(parentFrag);
+      this.gameDeck.stack.call(this);
     };
   };
-
+  // 	Cards
+  // 	----
+  // 	shuffle
   Deck.prototype.shuffle = function () {
-    var array = this.gameDeck.deckData;
-    var m = array.length,
+    var cardsToShuffle = this.gameDeck.deckData;
+    var m = cardsToShuffle.length,
       t,
       i;
-
-    // While there remain elements to shuffle…
     while (m) {
-      // Pick a remaining element…
       i = Math.floor(Math.random() * m--);
-
-      // And swap it with the current element.
-      t = array[m];
-      array[m] = array[i];
-      array[i] = t;
+      t = cardsToShuffle[m];
+      cardsToShuffle[m] = cardsToShuffle[i];
+      cardsToShuffle[i] = t;
     }
-    //this.gameDeck.deckData = array; // unnecessary as array is a reference so gameDeck already
-    this.gameDeck.buildDeck(this.deck_div);
+    //this.gameDeck.deckData = cardsToShuffle; // unnecessary, cardsToShuffle is already a reference to the same object
+    this.gameDeck.buildDeck.call(this);
   };
-
-  Deck.prototype.stack = function (deck_div) {
-    var cards = deck_div.children;
-    for (let i = 0; i < cards.length; i++) {
+  // 	stack
+  Deck.prototype.stack = function () {
+    var cards = this.deck_div.children;
+    for (var i = cards.length - 1; i >= 0; i--) {
       cards[i].style.top = i + 'px';
       cards[i].style.left = i + 'px';
       cards[i].classList.add('stacked_card');
     }
   };
-
   // Card
-  const Card = function () {
+  var Card = function () {
     this.id = '';
     this.data = '';
-    this.cardBack = document.createElement('div');
-    this.cardBack.className = 'card_back';
     this.cardCont = document.createElement('div');
     this.cardCont.className = 'card_container';
     this.cardFront = document.createElement('div');
     this.cardFront.className = 'card_front';
-
+    this.cardBack = document.createElement('div');
+    this.cardBack.className = 'card_back';
     this.buildCard = function (parentFrag) {
-      const flipDiv = document.createElement('div'),
+      var flipDiv = document.createElement('div'),
         frontValDiv = document.createElement('div'),
         backValDiv = document.createElement('div'),
         catDiv = document.createElement('div');
-
       flipDiv.className = 'flip';
       frontValDiv.className = 'front_val';
       backValDiv.className = 'back_val';
       catDiv.className = 'cat_val';
-
+      // 	val
       frontValDiv.innerHTML = this.data.q;
       backValDiv.innerHTML = this.data.a;
+      // 	suit
       catDiv.innerHTML = this.data.category;
+
       this.cardFront.appendChild(frontValDiv);
       this.cardFront.appendChild(catDiv);
       this.cardBack.appendChild(backValDiv);
+
       flipDiv.appendChild(this.cardFront);
       flipDiv.appendChild(this.cardBack);
 
       this.cardCont.id = this.id;
       this.cardCont.appendChild(flipDiv);
-
+      // 	----
+      // 	flip
       this.cardCont.onclick = cardClick;
-      //debugger;
       parentFrag.appendChild(this.cardCont);
     };
   };
 
-  var cardClick = (function () {
+  var cardClick = (function (e) {
     var counter = 0;
     return function (e) {
-      console.log(counter);
       e.currentTarget.classList.toggle('flip_card');
       e.currentTarget.classList.toggle('slide_over');
       e.currentTarget.style.zIndex = counter;
       counter++;
-      console.log(counter);
     };
   })();
 
-  // Discard Pile    console.log(
-  const DiscardPile = function () {
-    //   Holders
-    //   ----
-    //   accept or reject
-  };
-
+  // Discard Pile
+  var DiscardPile = function () {};
+  // 	Holders
+  // 	----
+  // 	accept or reject
   window.Game = Game;
 })(window);
