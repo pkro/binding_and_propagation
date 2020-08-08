@@ -119,3 +119,18 @@ Use fragments (document.createDocumentFragment) to add and manipulate elements b
 - **a**pply: calls function with new this as first param and assigns arguments from **a**rray
 - call: same as apply but with individual arguments
 
+**Drag&Drop**
+
+on the draggable element:
+
+- draggable: true or false 
+- ondragstart: allows communication between drag and drop
+
+on the destination:
+
+- ondrop
+- ondragover
+
+on drag event:
+
+- e.dataTransfer
