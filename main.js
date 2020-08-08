@@ -97,6 +97,9 @@
       learnMore.text = 'Learn more';
       learnMore.href = this.data.link;
       learnMore.target = '_bland';
+      learnMore.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
 
       var infoImage = document.createElement('img');
       infoImage.src = 'images/info.svg';
