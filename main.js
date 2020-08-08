@@ -38,6 +38,7 @@
         var card = new Card();
         card.id = 'card-' + i;
         card.data = this.option.data[i];
+
         card.buildCard(parentFrag);
       }
       this.deck_div.appendChild(parentFrag);
@@ -92,6 +93,16 @@
       // 	val
       frontValDiv.innerHTML = this.data.q;
       backValDiv.innerHTML = this.data.a;
+      var learnMore = document.createElement('a');
+      learnMore.text = 'Learn more';
+      learnMore.href = this.data.link;
+      learnMore.target = '_bland';
+
+      var infoImage = document.createElement('img');
+      infoImage.src = 'images/info.svg';
+
+      learnMore.appendChild(infoImage);
+      backValDiv.appendChild(learnMore);
       // 	suit
       catDiv.innerHTML = this.data.category;
 
